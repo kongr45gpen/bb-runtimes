@@ -866,6 +866,10 @@ stm32_board_configuration = {
     'stm32f769disco':    {'STM32_Main_Clock_Frequency': '200_000_000',
                           'STM32_HSE_Clock_Frequency': '25_000_000',
                           'STM32_FLASH_Latency': '6'},
+
+    'qemu-cubesat':      {'STM32_Main_Clock_Frequency': '200_000_000',
+                          'STM32_HSE_Clock_Frequency': '25_000_000',
+                          'STM32_FLASH_Latency': '6'},
     }
 
 
@@ -899,6 +903,8 @@ class Stm32(ArmV7MTarget):
         if self.mcu.startswith('stm32f4'):
             return 'cortex-m4'
         elif self.mcu.startswith('stm32f7'):
+            return 'cortex-m7'
+        elif self.mcu == 'qemu-cubesat':
             return 'cortex-m7'
         else:
             assert False, "Unexpected MCU %s" % self.mcu
@@ -934,6 +940,8 @@ class Stm32(ArmV7MTarget):
             self.mcu = 'stm32f7x'
         elif self.board in ['stm32f769disco']:
             self.mcu = 'stm32f7x9'
+        elif self.board in ['qemu-cubesat']:
+            self.mcu = 'qemu-cubesat'
         else:
             assert False, "Unknown stm32 board: %s" % self.board
 
@@ -975,6 +983,9 @@ class Stm32(ArmV7MTarget):
         elif self.mcu in ['stm32f7x',
                           'stm32f7x9']:
             self.add_gnat_source('arm/stm32/stm32f7x/s-stm32.adb')
+
+        elif self.mcu in ['qemu-cubesat']:
+            self.add_gnat_source('arm/stm32/qemu-cubesat/s-stm32.adb')
 
         # tasking support
         self.add_gnarl_sources(
