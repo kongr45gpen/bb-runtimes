@@ -25,13 +25,13 @@ package Ada.Interrupts.Names is
    UART_1_RX_Interrupt           : constant Interrupt_ID := 2;
 
    UART_1_TX_Interrupt           : constant Interrupt_ID := 3;
-   
+
    UART_2_RX_Interrupt           : constant Interrupt_ID := 4;
-   
+
    UART_2_TX_Interrupt           : constant Interrupt_ID := 5;
-   
+
    GPIO_Port0_Combined_Interrupt : constant Interrupt_ID := 6;
-   
+
    GPIO_Port1_Combined_Interrupt : constant Interrupt_ID := 7;
 
    TIMER_0_Interrupt             : constant Interrupt_ID := 8;
@@ -73,7 +73,7 @@ package Ada.Interrupts.Names is
    GPIO_Port0_Pin2_Interrupt     : constant Interrupt_ID := 26;
 
    GPIO_Port0_Pin3_Interrupt     : constant Interrupt_ID := 27;
- 
+
    GPIO_Port0_Pin4_Interrupt     : constant Interrupt_ID := 28;
 
    GPIO_Port0_Pin5_Interrupt     : constant Interrupt_ID := 29;
