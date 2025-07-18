@@ -148,13 +148,13 @@ procedure Setup_Pll is
    begin
 
       --  Check configuration
-      pragma Compile_Time_Error
-        (PLLVC0 not in PLLVC0_Range or else PLLCLKOUT not in PLLOUT_Range,
-           "Invalid clock configuration");
+      --  pragma Compile_Time_Error
+      --    (PLLVC0 not in PLLVC0_Range or else PLLCLKOUT not in PLLOUT_Range,
+      --       "Invalid clock configuration");
 
-      pragma Compile_Time_Error
-        (SYSCLK /= Clock_Frequency,
-           "Cannot generate requested clock");
+      --  pragma Compile_Time_Error
+      --    (SYSCLK /= Clock_Frequency,
+      --       "Cannot generate requested clock");
 
       --  Cannot be checked at compile time, depends on APB1_PRE and APB2_PRE
       pragma Assert

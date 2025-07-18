@@ -904,8 +904,8 @@ stm32_board_configuration = {
                           'STM32_HSE_Clock_Frequency': '25_000_000',
                           'STM32_FLASH_Latency': '6'},
 
-    'qemu-cubesat':      {'STM32_Main_Clock_Frequency': '200_000_000',
-                          'STM32_HSE_Clock_Frequency': '25_000_000',
+    'qemu-cubesat':      {'STM32_Main_Clock_Frequency': '25_000_000',
+                          'STM32_HSE_Clock_Frequency': '1_000_000',
                           'STM32_FLASH_Latency': '6'},
     }
 
