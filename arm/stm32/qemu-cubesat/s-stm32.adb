@@ -27,7 +27,6 @@
 
 with Interfaces;            use Interfaces;
 with Interfaces.STM32;      use Interfaces.STM32;
-with Interfaces.STM32.RCC;  use Interfaces.STM32.RCC;
 
 package body System.STM32 is
 
