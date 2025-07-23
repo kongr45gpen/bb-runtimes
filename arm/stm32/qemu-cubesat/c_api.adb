@@ -25,32 +25,10 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  with C_API;
-with Interfaces;            use Interfaces;
-with Interfaces.STM32;      use Interfaces.STM32;
-with Interfaces.STM32.RCC;  use Interfaces.STM32.RCC;
-
-package body System.STM32 is
-
-   -------------------
-   -- System_Clocks --
-   -------------------
-
-   function System_Clocks return RCC_System_Clocks
-   is
-      Result       : RCC_System_Clocks;
-
+package body C_API is
+   procedure Exception_Breakpoint is
    begin
-      Result.SYSCLK := 1000;
-      Result.HCLK   := 1000;
-      Result.PCLK1  := 1000;
-      Result.PCLK2  := 1000;
-      Result.TIMCLK1 := 1000;
-      Result.TIMCLK2 := 1000;
+      return;
+   end Exception_Breakpoint;
 
-      --  C_API.Exception_Breakpoint;
-
-      return Result;
-   end System_Clocks;
-
-end System.STM32;
+end C_API;

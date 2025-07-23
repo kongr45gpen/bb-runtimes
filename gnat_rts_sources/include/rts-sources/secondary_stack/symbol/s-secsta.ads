@@ -156,4 +156,7 @@ private
    Num_Of_Assigned_Stacks : Natural := 0;
    --  The number of currently allocated secondary stacks
 
+   procedure Exception_Breakpoint is null;
+   pragma Export (C, Exception_Breakpoint, "__EXCEPTION");
+
 end System.Secondary_Stack;

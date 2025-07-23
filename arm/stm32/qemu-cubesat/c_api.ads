@@ -25,32 +25,25 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  with C_API;
-with Interfaces;            use Interfaces;
-with Interfaces.STM32;      use Interfaces.STM32;
-with Interfaces.STM32.RCC;  use Interfaces.STM32.RCC;
+--  with Interfaces.C; use Interfaces.C;
 
-package body System.STM32 is
+with System;
 
-   -------------------
-   -- System_Clocks --
-   -------------------
+package C_API is
+   --  pragma No_Elaboration_Code_All;
+   --  pragma Preelaborate (C_API);
+   --  pragma Elaborate_Body;
+   pragma Preelaborate;
 
-   function System_Clocks return RCC_System_Clocks
-   is
-      Result       : RCC_System_Clocks;
+   procedure Exception_Breakpoint;
+   --   with
+      --  Export        => True,
+      --  Convention    => C,
+      --  External_Name => "EXCEPTIONLOL";
+   pragma Export (Asm, Exception_Breakpoint, "__gnat_exception_breakpoint");
 
-   begin
-      Result.SYSCLK := 1000;
-      Result.HCLK   := 1000;
-      Result.PCLK1  := 1000;
-      Result.PCLK2  := 1000;
-      Result.TIMCLK1 := 1000;
-      Result.TIMCLK2 := 1000;
+   You_Suffer_But_Why : System.Address;
+   pragma Export (Ada, You_Suffer_But_Why,
+      "__gnat_exception_you_suffer_but_why");
 
-      --  C_API.Exception_Breakpoint;
-
-      return Result;
-   end System_Clocks;
-
-end System.STM32;
+end C_API;

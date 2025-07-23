@@ -12,22 +12,22 @@
 	.p2align 9
 __vectors:
 	/* Cortex-M core interrupts */
-	.word   0                    /* stack top address */
-	.word   fault                /* 1 Reset.  */
-	.word   fault                /* 2 NMI. */
-	.word   fault                /* 3 Hard fault. */
-	.word   fault                /* 4 Mem manage. */
-	.word   fault                /* 5 Bus fault. */
-	.word   fault                /* 6 Usage fault. */
-	.word   fault                /* 7 reserved. */
-	.word   fault                /* 8 reserved. */
-	.word   fault                /* 9 reserved. */
-	.word   fault                /* 10 reserved. */
-	.word   __gnat_sv_call_trap  /* 11 SVCall. */
-	.word   __gnat_bkpt_trap     /* 12 Breakpoint. */
-	.word   fault                /* 13 reserved. */
-	.word   __gnat_pend_sv_trap  /* 14 PendSV. */
-	.word   __gnat_sys_tick_trap /* 15 Systick. */
+	.word   0                               /* stack top address */
+	.word   __gnat_handler_generic_error    /* 1 Reset.  */
+	.word   __gnat_handler_generic_error    /* 2 NMI. */
+	.word   __gnat_handler_hard_fault       /* 3 Hard fault. */
+	.word   __gnat_handler_memfault         /* 4 Mem manage. */
+	.word   __gnat_handler_busfault         /* 5 Bus fault. */
+	.word   __gnat_handler_usagefault       /* 6 Usage fault. */
+	.word   __gnat_handler_generic_error    /* 7 reserved. */
+	.word   __gnat_handler_generic_error    /* 8 reserved. */
+	.word   __gnat_handler_generic_error    /* 9 reserved. */
+	.word   __gnat_handler_generic_error    /* 10 reserved. */
+	.word   __gnat_sv_call_trap             /* 11 SVCall. */
+	.word   __gnat_bkpt_trap                /* 12 Breakpoint. */
+	.word   __gnat_handler_generic_error    /* 13 reserved. */
+	.word   __gnat_pend_sv_trap             /* 14 PendSV. */
+	.word   __gnat_sys_tick_trap            /* 15 Systick. */
 	/* MCU interrupts */
 	.word __gnat_irq_trap        /* 16 UART 0 RX */
 	.word __gnat_irq_trap        /* 17 UART 0 TX */
@@ -92,5 +92,73 @@ __gnat_sys_tick_trap:
 0:	b 0b
 	.size __gnat_sys_tick_trap, . - __gnat_sys_tick_trap
 
+/* Note: This requires 0x9FFF0000 to be memory mapped to the appropriate Qemu peripheral
+   (EMUDEV). Otherwise you will get an infinite loop of failures! */
+
 	.thumb_func
-fault:	b fault
+.weak __gnat_handler_generic_error
+.type __gnat_handler_generic_error, %function
+__gnat_handler_generic_error:
+	ldr r0, =0x9FFF0028
+	mov r1, #255
+	str r1, [r0]
+	b fault
+	.size __gnat_handler_generic_error, . - __gnat_handler_generic_error
+
+	.thumb_func
+.weak __gnat_handler_hard_fault
+.type __gnat_handler_hard_fault, %function
+__gnat_handler_hard_fault:
+	ldr r0, =0x9FFF0028
+	mov r1, #101
+	str r1, [r0]
+	b fault
+	.size __gnat_handler_hard_fault, . - __gnat_handler_hard_fault
+
+	.thumb_func
+.weak __gnat_handler_memfault
+.type __gnat_handler_memfault, %function
+__gnat_handler_memfault:
+	ldr r0, =0x9FFF0028
+	mov r1, #103
+	str r1, [r0]
+	b fault
+	.size __gnat_handler_memfault, . - __gnat_handler_memfault
+
+	.thumb_func
+.weak __gnat_handler_busfault
+.type __gnat_handler_busfault, %function
+__gnat_handler_busfault:
+	ldr r0, =0x9FFF0028
+	mov r1, #104
+	str r1, [r0]
+	b fault
+	.size __gnat_handler_busfault, . - __gnat_handler_busfault
+
+	.thumb_func
+.weak __gnat_handler_usagefault
+.type __gnat_handler_usagefault, %function
+__gnat_handler_usagefault:
+	ldr r0, =0x9FFF0028
+	mov r1, #105
+	str r1, [r0]
+	b fault
+	.size __gnat_handler_usagefault, . - __gnat_handler_usagefault
+
+fault:
+	/* Choose MSP (Main Stack Pointer) or PSP (Process Stack Pointer) */
+	tst lr, #4
+	ite eq
+	mrseq r4, msp
+	mrsne r4, psp
+	/* Load offset 6 from stack frame into R5 */
+	/* This is the fault PC (Program Counter) */
+	/* See https://developer.arm.com/documentation/107706/0100/Exceptions-and-interrupts-overview/Stack-frames */
+	ldr r5, [r4, #24]
+	/* Load PC into EMUDEV->PC */
+	ldr r0, =0x9FFF002C
+	str r5, [r0]
+	/* Call __EXCEPTION to let QEMU know we are here */
+	bl __EXCEPTION
+	/* Loop forever */
+0:	b 0b
