@@ -1023,6 +1023,8 @@ class Stm32(ArmV7MTarget):
 
         elif self.mcu in ['qemu-cubesat']:
             self.add_gnat_source('arm/stm32/qemu-cubesat/s-stm32.adb')
+            self.add_gnat_source('arm/stm32/qemu-cubesat/c_api.ads')
+            self.add_gnat_source('arm/stm32/qemu-cubesat/c_api.adb')
 
         # tasking support
         self.add_gnarl_sources(
